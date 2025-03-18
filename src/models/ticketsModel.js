@@ -5,5 +5,10 @@ const getTickets = async () => {
     return result.rows;
 };
 
+const getTicketById = async (id) => {
+    const result = await pool.query("SELECT * FROM tickets WHERE id = $1", [id]);
+    return result.rows[0];
+};
 
-module.exports = { getTickets }; 
+
+module.exports = { getTickets, getTicketById };
