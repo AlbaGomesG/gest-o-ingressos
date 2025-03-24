@@ -34,4 +34,17 @@ const createTicket = async (req, res) => {
     }
 };
 
-module.exports = { getAllTickets, getTicketById, createTicket };
+const updateTicket = async (req, res) => {
+    try {
+        const { categoria, preco } = req.body;
+        const updateTicket = await ticketsModel.updateTicket(req.params.id, categoria, preco);
+        if (!updateTicket) {
+            return res.status(404).json({ message: "Ingresso não encontrado!"});
+        }
+        res.json(updateTicket);
+    } catch (error) {
+        res.status(500).json({ message: "Erro ao atualizar ingresso"});
+    }
+};
+
+module.exports = { getAllTickets, getTicketById, createTicket, updateTicket };

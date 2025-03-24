@@ -15,5 +15,9 @@ const createTicket = async (evento, local, data_evento, categoria, preco, quanti
     return result.rows[0]; 
 };
 
+const updateTicket = async (id, categoria, preco) => {
+    const result = await pool.query("UPDATE tickets SET categoria = $1, preco = $2 WHERE id = $3 RETURNING *", [categoria, preco, id]);
+    return result.rows[0];
+}
 
-module.exports = { getTickets, getTicketById, createTicket };
+module.exports = { getTickets, getTicketById, createTicket, updateTicket };
