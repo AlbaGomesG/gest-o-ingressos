@@ -21,4 +21,17 @@ const getTicketById = async (req, res) => {
     }
 };
 
-module.exports = { getAllTickets, getTicketById };
+const createTicket = async (req, res) => {
+    try {
+        const { evento, local, data_evento, categoria, preco, quantidade_disponivel } = req.body;
+        const newTicket = await ticketsModel.createTicket(evento, local, data_evento, categoria, preco, quantidade_disponivel);
+        res.status(201).json(newTicket);
+    } catch (error) {
+            if (error.code === "23505") {
+                return res.status(400).json({ message: "Ingresso já cadastrado, tente outra vez!"})
+            }
+            res.status(500).json({ message: "Erro ao criar ingresso"});
+    }
+};
+
+module.exports = { getAllTickets, getTicketById, createTicket };
