@@ -24,6 +24,14 @@ const getTicketById = async (req, res) => {
 const createTicket = async (req, res) => {
     try {
         const { evento, local, data_evento, categoria, preco, quantidade_disponivel } = req.body;
+        const precosMinimos = {
+            "Pista Vip": 100,
+            "Camarote": 300,
+            "Arquibancada": 80
+        };
+        if (preco < precosMinimos[categoria]) {
+            throw new Error (`Valor mínimo para ${categoria} é R${precosMinimos[categoria]},00`);
+        }
         const newTicket = await ticketsModel.createTicket(evento, local, data_evento, categoria, preco, quantidade_disponivel);
         res.status(201).json(newTicket);
     } catch (error) {
@@ -56,4 +64,14 @@ const deleteTicket = async (req, res) => {
     }
 };
 
-module.exports = { getAllTickets, getTicketById, createTicket, updateTicket, deleteTicket };
+const vendaTicket = async (req, res) => {
+    try {
+        const { id, quantidade } = req.body;
+        const updatedTicket = await ticketsModel.vendaTicket(id, quantidade);
+        res.json({message: "Ingresso vendido com sucesso", ticket: updatedTicket});
+    } catch (error) {
+        res.status(404).json({message: "Erro ao vender ingresso"});
+}
+};
+
+module.exports = { getAllTickets, getTicketById, createTicket, updateTicket, deleteTicket, vendaTicket };
